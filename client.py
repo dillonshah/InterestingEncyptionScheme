@@ -1,5 +1,6 @@
 import socket
 import os
+import time
 
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
@@ -33,17 +34,23 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     ek = encryptor.encrypt(KEY)
     s.sendall(ek)
 
-    # Encrypt message
-    encrypted_message = encryptAES(KEY, MESSAGE)
-    print("Message encrypted")
+    while True:
+        MESSAGE = bytes(input("input message: "), 'utf-8')
+        # Encrypt message
+        encrypted_message = encryptAES(KEY, MESSAGE)
+        print("Message encrypted")
 
-    # Generate HMAC
-    hmac = getHMAC_SHA256(encrypted_message)
-    print("HMAC applied")
+        # Generate HMAC
+        hmac = getHMAC_SHA256(encrypted_message)
+        print("HMAC applied")
 
-    # Generate signature of concatanated message and hmac
-    sig = signature(encrypted_message + hmac, 2048, "client")
+        # Generate signature of concatanated message and hmac
+        sig = signature(encrypted_message + hmac, 2048, "client")
+        print("Signature Calculated, sending Message")
+        
+        timestamp = str(time.time()).encode('utf-8')
 
-    # Send result to server
-    print("Signature Calculated, sending Message")
-    s.sendall(encrypted_message + BREAK + hmac + BREAK + sig)
+        # Send result to server
+        s.sendall(encrypted_message + BREAK + hmac + BREAK + sig + BREAK + timestamp)
+
+        
