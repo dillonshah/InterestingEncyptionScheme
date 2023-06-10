@@ -35,22 +35,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.sendall(ek)
 
     while True:
-        MESSAGE = bytes(input("input message: "), 'utf-8')
+        MESSAGE = bytes(input("Input message: "), 'utf-8')
         # Encrypt message
-        encrypted_message = encryptAES(KEY, MESSAGE)
+        iv, ct = encryptAES(KEY, MESSAGE)
         print("Message encrypted")
-
+        s.sendall(iv)
         # Generate HMAC
-        hmac = getHMAC_SHA256(encrypted_message)
+        hmac = getHMAC_SHA256(ct)
         print("HMAC applied")
-
         # Generate signature of concatanated message and hmac
-        sig = signature(encrypted_message + hmac, 2048, "client")
+        sig = signature(ct + hmac, 2048, "client")
         print("Signature Calculated, sending Message")
         
         timestamp = str(time.time()).encode('utf-8')
 
         # Send result to server
-        s.sendall(encrypted_message + BREAK + hmac + BREAK + sig + BREAK + timestamp)
+        s.sendall(ct + BREAK + hmac + BREAK + sig + BREAK + timestamp)
 
         

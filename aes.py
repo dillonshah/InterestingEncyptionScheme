@@ -6,14 +6,15 @@ def encryptAES(key, pt):
     Creates an AES Cipher using ECB Mode.
     Retuens encrypted text.
     '''
-    cipher = AES.new(key, AES.MODE_ECB)
-    padded = pad(pt, 16)
-    return cipher.encrypt(padded)  
+    cipher = AES.new(key, AES.MODE_CBC)
+    ct = cipher.encrypt(pad(pt, AES.block_size))
+    iv = cipher.iv
+    return iv, ct
 
-def decryptAES(key, ct):
+def decryptAES(key, ct, iv):
     '''
     Creates an AES Cipher using ECB Mode.
     Retuens encrypted text.
     '''
-    cipher = AES.new(key, AES.MODE_ECB)
-    return unpad(cipher.decrypt(ct), 16)
+    decrypt_cipher = AES.new(key, AES.MODE_CBC, iv)
+    return unpad(decrypt_cipher.decrypt(ct), AES.block_size)

@@ -28,13 +28,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         key = decryptor.decrypt(ek)
 
         while True:
+            # Receive IV
+            iv = conn.recv(1024)
+            print("IV Received")
             # Receive message
             data = conn.recv(4096)
             print("Recieved message")
-
             # Split message on BREAK constant, and decrypt
             encrypted_message, hmac, sig, timeStamp = data.split(b"0000")
-            msg = decryptAES(key, encrypted_message)
+            msg = decryptAES(key, encrypted_message, iv)
             print("Unencrypted message: ", msg)
 
             # Verify that HMACs work
