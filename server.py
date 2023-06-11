@@ -8,7 +8,7 @@ from Crypto.Cipher import PKCS1_OAEP
 import time
 
 HOST = "127.0.0.1"
-PORT = 65412
+PORT = 65413
 
 privateKey, publicKey = getKeys("server")
 

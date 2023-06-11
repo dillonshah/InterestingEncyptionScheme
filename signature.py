@@ -5,7 +5,7 @@ from Crypto.Signature import DSS
 
 def signature(msg, keysize, name):
     '''
-    Creates key-pair and returns signature
+    Creates key pair and returns signature
     '''
     #Create DSA Key Pairs
     keys = DSA.generate(keysize)
@@ -22,7 +22,7 @@ def signature(msg, keysize, name):
 
 def verify(msg, signature, name):
     '''
-    Verifies that the signature is correct
+    Verifies the signature
     '''
     msg_hashed = SHA256.new(msg)
     with open(f"keys/pub_{name}.pem", "r") as keyfile:

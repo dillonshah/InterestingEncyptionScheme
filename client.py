@@ -1,6 +1,7 @@
 import socket
 import os
 import time
+import secrets
 
 from Crypto.PublicKey import RSA
 from Crypto.Cipher import PKCS1_OAEP
@@ -11,9 +12,9 @@ from mac import getHMAC_SHA256
 from signature import signature
 
 HOST = "127.0.0.1" 
-PORT = 65412
+PORT = 65413
 
-KEY = os.urandom(32)
+KEY = secrets.token_bytes(32)
 
 MESSAGE = b"It\'s not a bug, it\'s a feature."
 BREAK = b"0000"
